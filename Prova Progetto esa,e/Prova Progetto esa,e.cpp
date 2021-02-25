@@ -7,6 +7,7 @@ using namespace std;
 enum OPZIONI // enum = set di costanti
 {
     INVENTARIO,
+    miao,
     NEGOZIO,
     CERCA,
     BLACKJACK,
