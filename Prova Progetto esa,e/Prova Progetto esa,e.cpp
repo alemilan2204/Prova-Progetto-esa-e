@@ -2,17 +2,18 @@
 #include <conio.h>
 #include <ctime>
 #include <cstdlib>
+#include <fstream>
 using namespace std;
 
 enum OPZIONI // enum = set di costanti
 {
     INVENTARIO,
-    miao,
     NEGOZIO,
     CERCA,
     BLACKJACK,
     OPZIONE,
-    SALVATAGGIO
+    SALVATAGGIO,
+    NOTHING
 };
 
 
@@ -55,6 +56,7 @@ int main()
         {
             case INVENTARIO:
                 StampaInventario(inventario, nome);
+                _getch();
                 break;
 
             case NEGOZIO:
@@ -78,6 +80,7 @@ int main()
 
             default:
                 cout << "Scusa, non ho capito! :c \n";
+                _getch();
                 break;
         }
         
@@ -103,7 +106,7 @@ void StampaMenu()
 void StampaOpzioni()
 {
     system("cls");
-    textcolor(0);
+   /* textcolor(0);*/
 
 } // TODO: Da fare
 
@@ -330,8 +333,14 @@ void BlackJack(int& soldi)
 
 void Salvataggio(int* soldi, bool oggettiPosseduti[])
 {
+    ofstream file;
+    file.open("SaveData.txt", ios::out / ios::in);
 
-    // salva i progressi
+    file << soldi << endl;
+
+    cout << *soldi  << " --> Questi soldi salvati";
+    _getch();
+
 } // TODO: Da fare
 
 void Caricamento()
@@ -342,9 +351,10 @@ void Caricamento()
 OPZIONI ScriviOpzioni(string input)
 {
     if (input == "Inventario") return INVENTARIO;
-    if (input == "Negozio") return NEGOZIO;
-    if (input == "Cerca") return CERCA;
-    if (input == "BlackJack") return BLACKJACK;
-    if (input == "Salvataggio") return SALVATAGGIO;
+    else if (input == "Negozio") return NEGOZIO;
+    else if (input == "Cerca") return CERCA;
+    else if (input == "BlackJack") return BLACKJACK;
+    else if (input == "Salvataggio") return SALVATAGGIO;
+    else { return NOTHING; }
     return OPZIONI();
 }
