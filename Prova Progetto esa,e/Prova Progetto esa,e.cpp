@@ -12,7 +12,7 @@ enum OPZIONI // enum = set di costanti
     CERCA,
     BLACKJACK,
     OPZIONE,
-    SALVATAGGIO,
+    //SALVATAGGIO,
     NOTHING
 };
 
@@ -22,13 +22,16 @@ void StampaMenu();
 void StampaOpzioni();
 void StampaInventario(bool inventario[], string nome);
 bool HaSoldi(int soldiGiocatore, int costo);
-void Negozio(int& soldi, bool inventario[]);
+void Negozio(int soldi, bool inventario[]);
 void Cerca(int& soldi);
 void BlackJack(int& soldi);
+/*
 void Salvataggio(int *soldi, bool oggettiPosseduti[]);
-void Caricamento();
+void Caricamento()
+*/;
 
 OPZIONI ScriviOpzioni(string input);
+
 // -- -- -- -- -- -- --
 
 
@@ -37,13 +40,13 @@ int main()
     string nome = "";
     string input = "";
 
-    int soldi = 11500;
+    int soldi = 1500;
 
-    bool inventario[3] = {0}; //Pos 0: fucile da caccia, Pos 1: canna da pesca, Pos 2: PC
+    bool inventario[3] = {0}; //Pos 0: fucile da caccia, Pos 1: canna da pesca, Pos 2: PC 
 
     // -- -- -- -- -- -- -- -- --     
 
-    cout << "CIAO! Come ti chiami? IO sono Zenyatta!\n";
+    cout << "CIAO! Come ti chiami? IO sono Ebot 2.0!\n";            //TODO:  funzione fishing, hunting, gaming
     cin >> nome;
 
     
@@ -51,10 +54,11 @@ int main()
     {
         StampaMenu();
         cin >> input;
-        
+
         switch (ScriviOpzioni(input))
         {
             case INVENTARIO:
+                system("cls");
                 StampaInventario(inventario, nome);
                 _getch();
                 break;
@@ -74,9 +78,15 @@ int main()
                 BlackJack(soldi);
                 break;
 
-            case SALVATAGGIO:
+            case OPZIONE:
+                system("cls");
+                StampaOpzioni();
+                break;
+
+          /*  case SALVATAGGIO:
                 Salvataggio(&soldi, inventario);
                 break;
+          */
 
             default:
                 cout << "Scusa, non ho capito! :c \n";
@@ -105,39 +115,43 @@ void StampaMenu()
 
 void StampaOpzioni()
 {
-    system("cls");
-   /* textcolor(0);*/
-
+    cout << "PLACE HOLDER";
+    _getch();
+    
 } // TODO: Da fare
 
 void StampaInventario(bool inventario[], string nome)    //Fa vedere l'inventario del giocatore, se è vuoto, lo scrive
 {
-    cout << "\nCiao, " << nome << ", questo e' il tuo inventario:\n";
+    cout << "Ciao, " << nome << ", questo e' il tuo inventario:\n";
 
     if (inventario[0]) { cout << "- Fucile da caccia\n"; }
     else if (inventario[1]) { cout << "- Canna da pesca\n"; }
     else if (inventario[2]) { cout << "- PC\n"; }
     else
     {
-        cout << "\nOh no "<< nome <<"! Il tuo inventario e' vuoto :(\n"; 
+        cout << "\nOh no "<< nome <<"! Sembra che qui dentro non ci sia niente :(\n"; 
     }
 }
 
 bool HaSoldi(int soldiGiocatore, int costo)     
 {
     if (soldiGiocatore >= costo) { return true; }
+    else { return false; }
 }//controlla se ci sono soldi
 
-void Negozio(int& soldi, bool inventario[])   
+void Negozio(int soldi, bool inventario[])   
 {
     int scelta = 0;
+
     // -- -- -- -- -- 
+
     cout << "\n-- -- -- NEGOZIO -- -- -- \n\n";
     cout << "1) Fucile da caccia......1000\n"
             "2) Canna da pesca........500 \n"
-            "3) PC....................10000\n\n";
+            "3) PC....................10000\n"
+            "\nI tuoi soldi: "<< soldi << "\n\n";
 
-    cout << "Questo e' il negozio, vuoi comprare qualcosa? Scrivi il numero \n";
+    cout << "Questo e' il negozio, vuoi comprare qualcosa? \nScrivi il numero: ";
     cin >> scelta;
 
     switch (scelta)
@@ -147,7 +161,13 @@ void Negozio(int& soldi, bool inventario[])
             {
                 soldi -= 1000;
                 inventario[0] = true;
-                cout << "Ottimo, ora possiedi il Fucile da caccia!\n ";
+                cout << "\nOttimo, ora possiedi il Fucile da caccia!\n ";
+                _getch();
+            }
+            else
+            {
+                cout << "\nNon hai abbastanza soldi, esci subito di qui!!\n\n";
+                _getch();
             }
             break;
 
@@ -156,7 +176,13 @@ void Negozio(int& soldi, bool inventario[])
             {
                 soldi -= 500;
                 inventario[1] = true;
-                cout << "Che bello, ora puoi andare a pesca!! :)\n ";
+                cout << "\nChe bello, ora puoi andare a pesca!! :)\n ";
+                _getch();
+            }
+            else
+            {
+                cout << "\nNon pensare di cavartela con cosi' poco, ora esci subito di qui!!\n\n";
+                _getch();
             }
             break;
 
@@ -165,7 +191,13 @@ void Negozio(int& soldi, bool inventario[])
             {
                 soldi -= 10000;
                 inventario[2] = true;
-                cout << "Evidentemente sei così ricco da poterti permettere un PC!!  :o\n ";
+                cout << "\nEvidentemente sei cosi' ricco da poterti permettere un PC!!  :o\n ";
+                _getch();
+            }
+            else
+            {
+                cout << "\nTu pensavi di poter rubare questo gioiellino dal mio negozio??\nEsci subito di qui!!\n\n";
+                _getch();
             }
             break;
 
@@ -178,11 +210,12 @@ void Cerca(int& soldi)
 {
     string posti[5] = { "scuola","orfanotrofio abbandonato","luna",
                        "villetta a schiera americana","museo" };
+    
+    int estratti[3];
 
     srand(time(NULL));      //Inizializzazione del generatore di numeri casuali  
 
     int scelta = 0;
-    int estratti[3];
     int soldiGuadagnati = 0;
 
     // -- -- -- -- -- -- -- -- -- -- -- -- --
@@ -202,7 +235,7 @@ void Cerca(int& soldi)
         estratti[2] = rand() % 5;
     }
 
-
+    
     cout << "Scegli dove cercare i soldi: \n"
         << "1 - " << posti[estratti[0]] << "\n"
         << "2 - " << posti[estratti[1]] << "\n"
@@ -210,7 +243,7 @@ void Cerca(int& soldi)
 
     cin >> scelta;
 
-    if (scelta >= 4 || scelta < 1)
+    if (scelta >= 4 || scelta < 1)  //verifica che l'utente non scelga numeri maggiori di 4 o minori di 1
     {
         cout << "\nMah, hai perso quest' occasione >:(  \n";
         _getch();
@@ -331,22 +364,22 @@ void BlackJack(int& soldi)
 
 }
 
-void Salvataggio(int* soldi, bool oggettiPosseduti[])
-{
-    ofstream file;
-    file.open("SaveData.txt", ios::out / ios::in);
-
-    file << soldi << endl;
-
-    cout << *soldi  << " --> Questi soldi salvati";
-    _getch();
-
-} // TODO: Da fare
-
-void Caricamento()
-{
-    //carica i dati
-} // TODO: Da fare
+//void Salvataggio(int* soldi, bool oggettiPosseduti[])
+//{
+//    ofstream file;
+//    file.open("SaveData.txt", ios::out / ios::in);
+//
+//    file << soldi << endl;
+//
+//    cout << *soldi  << " --> Questi soldi salvati";
+//    _getch();
+//
+//} // TODO: Da fare
+//
+//void Caricamento()
+//{
+//    //carica i dati
+//} // TODO: Da fare
 
 OPZIONI ScriviOpzioni(string input)
 {
@@ -354,7 +387,8 @@ OPZIONI ScriviOpzioni(string input)
     else if (input == "Negozio") return NEGOZIO;
     else if (input == "Cerca") return CERCA;
     else if (input == "BlackJack") return BLACKJACK;
-    else if (input == "Salvataggio") return SALVATAGGIO;
+    else if (input == "Opzioni") return OPZIONE;
+    //else if (input == "Salvataggio") return SALVATAGGIO;
     else { return NOTHING; }
     return OPZIONI();
 }
